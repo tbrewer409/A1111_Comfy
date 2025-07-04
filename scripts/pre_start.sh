@@ -2,6 +2,7 @@
 
 export PYTHONUNBUFFERED=1
 export APP="stable-diffusion-webui"
+export COMFY_APP="ComfyUI"
 
 TEMPLATE_NAME="a1111"
 TEMPLATE_VERSION_FILE="/workspace/${APP}/template.json"
@@ -103,12 +104,17 @@ sync_apps() {
         # Start the timer
         start_time=$(date +%s)
 
-        echo "SYNC: Sync 1 of 2"
+        echo "SYNC: Sync 1 of 4"
         sync_directory "/venv" "${VENV_PATH}"
-        echo "SYNC: Sync 2 of 2"
+        echo "SYNC: Sync 2 of 4"
         sync_directory "/${APP}" "/workspace/${APP}"
+        echo "SYNC: Sync 3 of 4"
+        sync_directory "/venv_comfyui" "/workspace/venvs/comfyui"
+        echo "SYNC: Sync 4 of 4"
+        sync_directory "/${COMFY_APP}" "/workspace/${COMFY_APP}"
         save_template_json
         echo "${VENV_PATH}" > "/workspace/${APP}/venv_path"
+        echo "/workspace/venvs/comfyui" > "/workspace/${COMFY_APP}/venv_path"
 
         # End the timer and calculate the duration
         end_time=$(date +%s)
@@ -126,6 +132,8 @@ sync_apps() {
 fix_venvs() {
     echo "VENV: Fixing Stable Diffusion Web UI venv..."
     /fix_venv.sh /venv ${VENV_PATH}
+    echo "VENV: Fixing ComfyUI venv..."
+    /fix_venv.sh /venv_comfyui /workspace/venvs/comfyui
 }
 
 if [ "$(printf '%s\n' "$EXISTING_VERSION" "$TEMPLATE_VERSION" | sort -V | head -n 1)" = "$EXISTING_VERSION" ]; then
