@@ -15,7 +15,7 @@ variable "RELEASE" {
 }
 
 variable "VERSION" {
-     default = "1.1.4"
+     default = "1.2.0"
 }
 
 variable "CU_VERSION" {
